@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="300" height="300" viewBox="0 0 300 300">
+  <defs>
+    <clipPath id="clip-path">
+      <rect x="-18" y="-31" width="300" height="300" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="스크롤_그룹_1" data-name="스크롤 그룹 1" transform="translate(18 31)" clip-path="url(#clip-path)" style="isolation: isolate">
+    <g id="그룹_3200" data-name="그룹 3200" transform="translate(-2469 -1699)">
+      <ellipse id="타원_37" data-name="타원 37" cx="68" cy="53" rx="68" ry="53" transform="translate(2467 1779)" fill="#a8d8ea"/>
+      <ellipse id="타원_38" data-name="타원 38" cx="68" cy="53" rx="68" ry="53" transform="translate(2557 1736)" fill="#a8d8ea"/>
+      <ellipse id="타원_39" data-name="타원 39" cx="68" cy="53" rx="68" ry="53" transform="translate(2603 1779)" fill="#a8d8ea"/>
+      <ellipse id="타원_40" data-name="타원 40" cx="68" cy="53" rx="68" ry="53" transform="translate(2535 1789)" fill="#a8d8ea"/>
+    </g>
+  </g>
+</svg>

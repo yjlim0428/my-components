@@ -37,6 +37,9 @@ const Sidebar = () => {
       <Link href="/BarChart">
         <Button>BarChart</Button>
       </Link>
+      <Link href="/TextField">
+        <Button>TextField</Button>
+      </Link>
     </Container>
   );
 };

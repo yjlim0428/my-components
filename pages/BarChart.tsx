@@ -1,11 +1,221 @@
 import Title from "../components/Title";
+import styled from "styled-components";
+import {
+  PropsTypes,
+  ContainerTypes,
+  ChartTitleTypes,
+  DataTitleTextTypes,
+  DataTitleDotType,
+  BarType,
+} from "../lib/BarChart";
+import { useEffect, useState } from "react";
 
-const BarChart = () => {
+const Container = styled.div<ContainerTypes>`
+  width: ${({ width }) => (width ? width : 616)}px;
+  height: ${({ height }) => (height ? height : 334)}px;
+`;
+
+const ChartTitle = styled.div<ChartTitleTypes>`
+  font-size: ${({ fontSize }) => (fontSize ? fontSize : 16)}px;
+`;
+
+const DataTitleText = styled.div<DataTitleTextTypes>`
+  font-size: ${({ fontSize }) => (fontSize ? fontSize : 16)}px;
+  color: #a6afbd;
+`;
+
+const DataTitleDot = styled.div<DataTitleDotType>`
+  width: ${({ width }) => (width ? width : 7)}px;
+  height: ${({ width }) => (width ? width : 7)}px;
+  background-color: ${({ color }) => (color ? color : "#000")};
+  border-radius: 50%;
+  margin-right: 8px;
+`;
+
+const RowBox = styled.div<{ jContents: string }>`
+  width: 100%;
+  display: flex;
+  justify-content: ${({ jContents }) => jContents};
+  align-items: center;
+  margin-bottom: 12px;
+`;
+
+const DataTitleRowBox = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const TitleDotSet = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: 12px;
+  &:last-child {
+    margin: 0;
+  }
+`;
+
+const ChartViewr = styled.div`
+  width: 100%;
+  height: calc(100% - 32px);
+  border-top: 2px solid #e0e0e0;
+  border-bottom: 2px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+`;
+
+// 바, 눈금선의 부모
+const ChartRelative = styled.div`
+  width: 100%;
+  height: 75%;
+  position: relative;
+  margin-left: auto;
+`;
+
+const BarWrapper = styled.div`
+  width: 95%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-evenly;
+  position: absolute;
+  right: 0;
+  border: 1px solid red;
+`;
+
+const XLabelWrapper = styled.div`
+  width: 95%;
+  display: flex;
+  justify-content: space-evenly;
+  position: absolute;
+  right: 0;
+  border: green;
+  /* // TODO */
+`;
+
+const DotLineYUnitWrapper = styled.div<{ top: number }>`
+  width: 95%;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 0;
+  bottom: ${({ top }) => top}%;
+  border-bottom: 1px dashed #dddddd;
+`;
+
+const YUnitText = styled.div<{ fontSize: number | undefined }>`
+  width: 5%;
+  margin-left: -5%;
+  margin-bottom: ${({ fontSize }) =>
+    fontSize ? `-calc(${fontSize}px / 2)` : -4}px;
+  font-size: ${({ fontSize }) => (fontSize ? fontSize : 8)}px;
+  color: #999999;
+`;
+
+const Bar = styled.div<BarType>`
+  width: ${({ width }) => width}px;
+  height: ${({ height }) => height}%;
+  background-color: ${({ color }) => color};
+  border-radius: 3px;
+`;
+
+// 더미데이터
+const styleProps = {
+  width: 616,
+  height: 334,
+  barWidth: 7,
+  barColor: ["#103B65", "#CCCCCC"],
+  chartTitleFontSize: 16,
+  dataTitleFontSize: 12,
+  dotWidth: 7,
+};
+
+// 더미데이터
+const dataProps = [
+  {
+    title: "가입",
+    data: [17, 5, 19, 13, 25, 18, 9, 13, 23, 15, 25, 28],
+  },
+  {
+    title: "탈퇴",
+    data: [5, 2, 10, 7, 20, 13, 2, 4, 13, 9, 19, 16],
+  },
+];
+
+const BarChart = ({
+  style = styleProps,
+  title = "가입자 수 통계",
+  xLabel = [
+    "1월",
+    "2월",
+    "3월",
+    "4월",
+    "5월",
+    "6월",
+    "7월",
+    "8월",
+    "9월",
+    "10월",
+    "11월",
+    "12월",
+  ],
+  yUnit = 10,
+  data = dataProps,
+}: PropsTypes) => {
+  // y축 가장 높은 값
+  const [yUnitMax, setYUnitMax] = useState(
+    (Math.floor(Math.max(...data[0].data) / yUnit) + 1) * yUnit
+  );
+
+  //   y축 단위 리스트
+
+  useEffect(() => {
+    setYUnitMax((Math.floor(Math.max(...data[0].data) / yUnit) + 1) * yUnit);
+  }, []);
+
   return (
-    <div>
+    <>
       <Title title="My BarChart" />
-      BarChart
-    </div>
+      <Container width={style.width} height={style.height}>
+        <RowBox jContents="space-between">
+          <ChartTitle fontSize={style.chartTitleFontSize}>{title}</ChartTitle>
+          <DataTitleRowBox>
+            {data.map(({ title }, index) => (
+              <TitleDotSet key={index}>
+                <DataTitleDot
+                  width={style.dotWidth}
+                  color={style.barColor && style.barColor[index]}
+                />
+                <DataTitleText fontSize={style.dataTitleFontSize}>
+                  {title}
+                </DataTitleText>
+              </TitleDotSet>
+            ))}
+          </DataTitleRowBox>
+        </RowBox>
+        <ChartViewr>
+          <ChartRelative>
+            {[100, 75, 50, 25, 0].map((number, index) => (
+              <DotLineYUnitWrapper key={index} top={number}>
+                <YUnitText fontSize={undefined}>
+                  {yUnitMax * (number / 100)}
+                </YUnitText>
+              </DotLineYUnitWrapper>
+            ))}
+
+            <BarWrapper>
+              {data[0].data.map((value, index) => (
+                <Bar
+                  key={index}
+                  width={style.barWidth}
+                  height={(value / yUnitMax) * 100}
+                  color={style.barColor && style.barColor[0]}
+                />
+              ))}
+            </BarWrapper>
+          </ChartRelative>
+        </ChartViewr>
+      </Container>
+    </>
   );
 };
 

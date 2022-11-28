@@ -19,19 +19,6 @@ const ChartTitle = styled.div<ChartTitleTypes>`
   font-size: ${({ fontSize }) => (fontSize ? fontSize : 16)}px;
 `;
 
-const DataTitleText = styled.div<DataTitleTextTypes>`
-  font-size: ${({ fontSize }) => (fontSize ? fontSize : 16)}px;
-  color: #a6afbd;
-`;
-
-const DataTitleDot = styled.div<DataTitleDotType>`
-  width: ${({ width }) => (width ? width : 7)}px;
-  height: ${({ width }) => (width ? width : 7)}px;
-  background-color: ${({ color }) => (color ? color : "#000")};
-  border-radius: 50%;
-  margin-right: 8px;
-`;
-
 const RowBox = styled.div<{ jContents: string }>`
   width: 100%;
   display: flex;
@@ -52,6 +39,19 @@ const TitleDotSet = styled.div`
   &:last-child {
     margin: 0;
   }
+`;
+
+const DataTitleText = styled.div<DataTitleTextTypes>`
+  font-size: ${({ fontSize }) => (fontSize ? fontSize : 16)}px;
+  color: #a6afbd;
+`;
+
+const DataTitleDot = styled.div<DataTitleDotType>`
+  width: ${({ width }) => (width ? width : 7)}px;
+  height: ${({ width }) => (width ? width : 7)}px;
+  background-color: ${({ color }) => (color ? color : "#000")};
+  border-radius: 50%;
+  margin-right: 8px;
 `;
 
 const ChartViewr = styled.div`
@@ -79,7 +79,13 @@ const BarWrapper = styled.div`
   justify-content: space-evenly;
   position: absolute;
   right: 0;
-  border: 1px solid red;
+`;
+
+const Bar = styled.div<BarType>`
+  width: ${({ width }) => width}px;
+  height: ${({ height }) => height}%;
+  background-color: ${({ color }) => color};
+  border-radius: 3px;
 `;
 
 const XLabelWrapper = styled.div`
@@ -88,11 +94,19 @@ const XLabelWrapper = styled.div`
   justify-content: space-evenly;
   position: absolute;
   right: 0;
-  border: green;
-  /* // TODO */
+  bottom: -10%;
 `;
 
-const DotLineYUnitWrapper = styled.div<{ top: number }>`
+const XLabelText = styled.div`
+  width: 1px;
+  display: flex;
+  justify-content: center;
+  white-space: nowrap;
+  font-size: 10px;
+  color: #999999;
+`;
+
+const DotAndYLabelWrapper = styled.div<{ top: number }>`
   width: 95%;
   display: flex;
   align-items: center;
@@ -102,20 +116,13 @@ const DotLineYUnitWrapper = styled.div<{ top: number }>`
   border-bottom: 1px dashed #dddddd;
 `;
 
-const YUnitText = styled.div<{ fontSize: number | undefined }>`
+const YLabelText = styled.div<{ fontSize: number | undefined }>`
   width: 5%;
   margin-left: -5%;
   margin-bottom: ${({ fontSize }) =>
     fontSize ? `-calc(${fontSize}px / 2)` : -4}px;
   font-size: ${({ fontSize }) => (fontSize ? fontSize : 8)}px;
   color: #999999;
-`;
-
-const Bar = styled.div<BarType>`
-  width: ${({ width }) => width}px;
-  height: ${({ height }) => height}%;
-  background-color: ${({ color }) => color};
-  border-radius: 3px;
 `;
 
 // 더미데이터
@@ -166,8 +173,6 @@ const BarChart = ({
     (Math.floor(Math.max(...data[0].data) / yUnit) + 1) * yUnit
   );
 
-  //   y축 단위 리스트
-
   useEffect(() => {
     setYUnitMax((Math.floor(Math.max(...data[0].data) / yUnit) + 1) * yUnit);
   }, []);
@@ -176,6 +181,7 @@ const BarChart = ({
     <>
       <Title title="My BarChart" />
       <Container width={style.width} height={style.height}>
+        {/* title */}
         <RowBox jContents="space-between">
           <ChartTitle fontSize={style.chartTitleFontSize}>{title}</ChartTitle>
           <DataTitleRowBox>
@@ -192,16 +198,19 @@ const BarChart = ({
             ))}
           </DataTitleRowBox>
         </RowBox>
+
         <ChartViewr>
           <ChartRelative>
+            {/* y축 */}
             {[100, 75, 50, 25, 0].map((number, index) => (
-              <DotLineYUnitWrapper key={index} top={number}>
-                <YUnitText fontSize={undefined}>
+              <DotAndYLabelWrapper key={index} top={number}>
+                <YLabelText fontSize={undefined}>
                   {yUnitMax * (number / 100)}
-                </YUnitText>
-              </DotLineYUnitWrapper>
+                </YLabelText>
+              </DotAndYLabelWrapper>
             ))}
 
+            {/* 바 */}
             <BarWrapper>
               {data[0].data.map((value, index) => (
                 <Bar
@@ -212,6 +221,13 @@ const BarChart = ({
                 />
               ))}
             </BarWrapper>
+
+            {/* x축 */}
+            <XLabelWrapper>
+              {xLabel.map((text, index) => (
+                <XLabelText key={index}>{text}</XLabelText>
+              ))}
+            </XLabelWrapper>
           </ChartRelative>
         </ChartViewr>
       </Container>

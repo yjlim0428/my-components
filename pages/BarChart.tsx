@@ -1,5 +1,5 @@
 import Title from "../components/Title";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import {
   PropsTypes,
   ContainerTypes,
@@ -9,6 +9,15 @@ import {
   BarType,
 } from "../lib/BarChart";
 import { useEffect, useState } from "react";
+
+const barAnimation = (height: number) => keyframes`
+    0%{
+        height: 0%;
+    }
+    100%{
+        height:${height}%;
+    }
+`;
 
 const Container = styled.div<ContainerTypes>`
   width: ${({ width }) => (width ? width : 616)}px;
@@ -81,11 +90,21 @@ const BarWrapper = styled.div`
   right: 0;
 `;
 
+const BarSet = styled.div`
+  width: 1px;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+`;
+
 const Bar = styled.div<BarType>`
   width: ${({ width }) => width}px;
-  height: ${({ height }) => height}%;
   background-color: ${({ color }) => color};
   border-radius: 3px;
+  animation: 2s ${({ height }) => height && barAnimation(height)};
+  animation-fill-mode: forwards;
+  flex-shrink: 0;
 `;
 
 const XLabelWrapper = styled.div`
@@ -213,12 +232,16 @@ const BarChart = ({
             {/* 바 */}
             <BarWrapper>
               {data[0].data.map((value, index) => (
-                <Bar
-                  key={index}
-                  width={style.barWidth}
-                  height={(value / yUnitMax) * 100}
-                  color={style.barColor && style.barColor[0]}
-                />
+                <BarSet key={index}>
+                  {data.map((dataObj, idx) => (
+                    <Bar
+                      key={`${dataObj.title} - ${index}`}
+                      width={style.barWidth}
+                      height={(dataObj.data[index] / yUnitMax) * 100}
+                      color={style.barColor && style.barColor[idx]}
+                    />
+                  ))}
+                </BarSet>
               ))}
             </BarWrapper>
 

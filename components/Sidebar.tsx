@@ -40,6 +40,9 @@ const Sidebar = () => {
       <Link href="/TextField">
         <Button>TextField</Button>
       </Link>
+      <Link href="/Modal">
+        <Button>Modal</Button>
+      </Link>
     </Container>
   );
 };

@@ -2,8 +2,12 @@ import Link from "next/link";
 import styled from "styled-components";
 
 const Container = styled.div`
-  width: 100%;
-  height: 100%;
+  /* width: 100%; */
+  width: 350px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  bottom: 0;
   padding: 50px;
   background-color: lightgray;
 `;
@@ -42,6 +46,9 @@ const Sidebar = () => {
       </Link>
       <Link href="/Modal">
         <Button>Modal</Button>
+      </Link>
+      <Link href="/FloatingButton">
+        <Button>FloatingButton</Button>
       </Link>
     </Container>
   );

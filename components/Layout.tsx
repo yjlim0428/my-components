@@ -6,7 +6,6 @@ import Link from "next/link";
 
 const Container = styled.div`
   width: 100%;
-  height: 100vh;
   display: grid;
   grid-template-columns: 1fr 350px;
 `;
@@ -51,18 +50,13 @@ export default function Layout({ children }: Props) {
       <Head>
         <link rel="shortcut icon" href="/favicon.svg" />
       </Head>
+      <Link target="_blank" href="https://github.com/yjlim0428/my-components">
+        <GitHubLink>
+          <GitHubIcon src="/GitHub-Mark-Light-64px.png" />
+        </GitHubLink>
+      </Link>
       <Container>
-        <ComponentViewer>
-          <Link
-            target="_blank"
-            href="https://github.com/yjlim0428/my-components"
-          >
-            <GitHubLink>
-              <GitHubIcon src="/GitHub-Mark-Light-64px.png" />
-            </GitHubLink>
-          </Link>
-          {children}
-        </ComponentViewer>
+        <ComponentViewer>{children}</ComponentViewer>
         <Sidebar />
       </Container>
     </>

@@ -13,7 +13,7 @@ const Wrapper = styled.div`
 
 const Slide = styled.div<{ count: number }>`
   display: flex;
-  transition: ${({ last }) => (last ? "" : "transform 0.5s ease-in")};
+  transition: transform 0.5s ease-in;
   transform: ${({ count }) => "translateX(-" + count * 100 + "%)"};
   > div {
     width: 100%;

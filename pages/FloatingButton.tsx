@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Title from "../components/Title";
+import Title from "../components/layout/Title";
 import { FaChevronUp } from "react-icons/fa";
 
 const Container = styled.div`

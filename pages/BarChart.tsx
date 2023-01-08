@@ -1,4 +1,4 @@
-import Title from "../components/Title";
+import Title from "../components/layout/Title";
 import styled, { keyframes } from "styled-components";
 import {
   PropsTypes,

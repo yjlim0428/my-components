@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Title from "../components/Title";
+import Title from "../components/layout/Title";
 
 const Container = styled.div`
   width: 100%;

@@ -1,6 +1,7 @@
 import Date_Picker from "../components/feature/Calendar/Date_Picker";
 import Title from "../components/layout/Title";
 import styled from "styled-components";
+import Date_Range_Picker from "../components/feature/Calendar/Date_Range_Picker";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -12,10 +13,15 @@ const Wrapper = styled.div`
 
 function Calendar() {
   return (
-    <Wrapper>
+    <>
       <Title title="My Calendar" />
-      <Date_Picker />
-    </Wrapper>
+      <Wrapper>
+        <Date_Picker />
+      </Wrapper>
+      <Wrapper>
+        <Date_Range_Picker />
+      </Wrapper>
+    </>
   );
 }
 // TODO :: 날짜 범위 선택

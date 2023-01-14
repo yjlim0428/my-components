@@ -3,25 +3,6 @@ import styled, { css } from "styled-components";
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
 import { dateFormat } from "../../../lib/dateFormat";
 
-const OpenButton = styled.div<{ modal: boolean }>`
-  width: 60px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid darkgray;
-  border-radius: 3px;
-  color: gray;
-  cursor: pointer;
-  position: relative;
-  ${({ modal }) =>
-    modal &&
-    css`
-      color: white;
-      background-color: darkgray;
-    `}
-`;
-
 const RowBox = styled.div`
   display: flex;
   align-items: center;
@@ -29,9 +10,10 @@ const RowBox = styled.div`
 `;
 
 const ValueViewer = styled.div`
-  font-size: 17px;
-  padding: 5px 16px;
-  margin-left: 20px;
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  padding: 5px 0;
   border: 1px solid lightgray;
   border-radius: 8px;
   cursor: pointer;
@@ -74,14 +56,17 @@ const DateGrid = styled.div`
   grid-template-columns: repeat(7, 1fr);
 `;
 
-const DateBox = styled.div<{ current: boolean; selected: boolean }>`
+const DateBox = styled.div<{
+  current: boolean;
+  selected: boolean;
+  startEnd: boolean;
+}>`
   width: 100%;
   aspect-ratio: 1 / 1;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 12px;
-  border-radius: 3px;
   cursor: pointer;
   ${({ current }) =>
     !current
@@ -96,8 +81,15 @@ const DateBox = styled.div<{ current: boolean; selected: boolean }>`
   ${({ selected }) =>
     selected &&
     css`
-      background-color: black;
+      background-color: #8ec4d9;
       color: white;
+    `}
+
+  ${({ startEnd }) =>
+    startEnd &&
+    css`
+      color: white;
+      background-color: #74b1c8;
     `}
 `;
 
@@ -125,11 +117,16 @@ interface getFullMonthReturnTypes {
   dateObj: Date;
   state: string;
 }
+
 const Date_Range_Picker = () => {
   const today = new Date();
-  const [selectDate, setSelectDate] = useState([
-    new Date(today.getFullYear(), today.getMonth(), today.getDate()),
-  ]);
+  const [selectDate, setSelectDate] = useState<{
+    start: null | Date;
+    end: null | Date;
+  }>({
+    start: null,
+    end: null,
+  });
   const [modal, setModal] = useState(false);
   const [yearMonth, setYearMonth] = useState<number[]>([
     today.getFullYear(),
@@ -204,10 +201,20 @@ const Date_Range_Picker = () => {
   };
 
   const selectDateHandle = (day: getFullMonthReturnTypes) => {
-    // if(selectDate[0] < day) {}
-    console.log(">>>>", selectDate[0], day);
-    setSelectDate([...selectDate, day.dateObj]);
-    setModal(false);
+    if (selectDate.start === null) {
+      //
+      setSelectDate({ ...selectDate, start: day.dateObj });
+      return;
+    }
+    if (selectDate.end === null) {
+      if (day.dateObj.getTime() < selectDate.start.getTime())
+        setSelectDate({ start: day.dateObj, end: selectDate.start });
+      else setSelectDate({ ...selectDate, end: day.dateObj });
+      return;
+    }
+    setSelectDate({ start: day.dateObj, end: null });
+
+    if (selectDate.end === null) setModal(false);
   };
 
   useEffect(() => console.log(selectDate), [selectDate]);
@@ -216,8 +223,13 @@ const Date_Range_Picker = () => {
     <>
       <RowBox>
         <ValueViewer onClick={() => setModal(!modal)}>
-          {dateFormat(selectDate[0], "yyyy.MM.dd (W)")} ~{" "}
-          {dateFormat(selectDate[selectDate.length - 1], "yyyy.MM.dd (W)")}
+          {selectDate.start === null
+            ? "-"
+            : dateFormat(selectDate.start, "yyyy.MM.dd (W)")}{" "}
+          ~{" "}
+          {selectDate.end === null
+            ? "-"
+            : dateFormat(selectDate.end, "yyyy.MM.dd (W)")}
         </ValueViewer>
         {modal && (
           <>
@@ -245,7 +257,19 @@ const Date_Range_Picker = () => {
                     <DateBox
                       key={idx}
                       current={day.state === "cur"}
-                      selected={String(selectDate) === String(day.dateObj)}
+                      selected={
+                        selectDate.start !== null &&
+                        selectDate.end !== null &&
+                        selectDate.start.getTime() <= day.dateObj.getTime() &&
+                        day.dateObj.getTime() <= selectDate.end.getTime()
+                      }
+                      startEnd={
+                        (selectDate.start !== null &&
+                          selectDate.start.getTime() ===
+                            day.dateObj.getTime()) ||
+                        (selectDate.end !== null &&
+                          selectDate.end.getTime() === day.dateObj.getTime())
+                      }
                       onClick={() =>
                         day.state === "cur" && selectDateHandle(day)
                       }

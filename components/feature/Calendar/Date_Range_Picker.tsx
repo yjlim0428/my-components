@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, HtmlHTMLAttributes } from "react";
 import styled, { css } from "styled-components";
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
 import { dateFormat } from "../../../lib/dateFormat";
@@ -119,6 +119,8 @@ interface getFullMonthReturnTypes {
 }
 
 const Date_Range_Picker = () => {
+  const ref = useRef<HTMLDivElement>(null);
+
   const today = new Date();
   const [selectDate, setSelectDate] = useState<{
     start: null | Date;
@@ -217,11 +219,23 @@ const Date_Range_Picker = () => {
     if (selectDate.end === null) setModal(false);
   };
 
-  useEffect(() => console.log(selectDate), [selectDate]);
+  // useEffect(() => console.log(selectDate), [selectDate]);
+
+  useEffect(() => {
+    const click = (e: any) => {
+      console.log("야", ref.current);
+      if (ref.current && !ref.current.contains(e.target)) {
+        console.log("여기는 안 들어오냐");
+        setModal(false);
+      }
+    };
+    window.addEventListener("click", click);
+    return () => window.removeEventListener("click", click);
+  }, []);
 
   return (
     <>
-      <RowBox>
+      <RowBox ref={ref}>
         <ValueViewer onClick={() => setModal(!modal)}>
           {selectDate.start === null
             ? "-"

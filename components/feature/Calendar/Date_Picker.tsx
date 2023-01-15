@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
 import { dateFormat } from "../../../lib/dateFormat";
@@ -122,6 +122,7 @@ interface getFullMonthReturnTypes {
   state: string;
 }
 const Date_Picker = () => {
+  const ref = useRef<HTMLDivElement>(null);
   const today = new Date();
   const [selectDate, setSelectDate] = useState(
     new Date(today.getFullYear(), today.getMonth(), today.getDate())
@@ -201,12 +202,21 @@ const Date_Picker = () => {
 
   const selectDateHandle = (day: getFullMonthReturnTypes) => {
     setSelectDate(day.dateObj);
-    setModal(false);
   };
+
+  useEffect(() => {
+    const click = (e: any) => {
+      if (ref.current && !ref.current.contains(e.target)) {
+        setModal(false);
+      }
+    };
+    window.addEventListener("click", click);
+    return () => window.removeEventListener("click", click);
+  }, []);
 
   return (
     <>
-      <RowBox>
+      <RowBox ref={ref}>
         <OpenButton modal={modal} onClick={() => setModal(!modal)}>
           달력
         </OpenButton>

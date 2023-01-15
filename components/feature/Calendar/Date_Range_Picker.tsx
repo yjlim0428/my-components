@@ -204,7 +204,6 @@ const Date_Range_Picker = () => {
 
   const selectDateHandle = (day: getFullMonthReturnTypes) => {
     if (selectDate.start === null) {
-      //
       setSelectDate({ ...selectDate, start: day.dateObj });
       return;
     }
@@ -219,13 +218,9 @@ const Date_Range_Picker = () => {
     if (selectDate.end === null) setModal(false);
   };
 
-  // useEffect(() => console.log(selectDate), [selectDate]);
-
   useEffect(() => {
     const click = (e: any) => {
-      console.log("야", ref.current);
       if (ref.current && !ref.current.contains(e.target)) {
-        console.log("여기는 안 들어오냐");
         setModal(false);
       }
     };

@@ -58,6 +58,7 @@ const DateGrid = styled.div`
 
 const DateBox = styled.div<{
   current: boolean;
+  today: boolean;
   selected: boolean;
   startEnd: boolean;
 }>`
@@ -68,6 +69,11 @@ const DateBox = styled.div<{
   align-items: center;
   font-size: 12px;
   cursor: pointer;
+  ${({ today }) =>
+    today &&
+    css`
+      border: 1px solid lightgray;
+    `}
   ${({ current }) =>
     !current
       ? css`
@@ -121,7 +127,7 @@ interface getFullMonthReturnTypes {
 const Date_Range_Picker = () => {
   const ref = useRef<HTMLDivElement>(null);
 
-  const today = new Date();
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
   const [selectDate, setSelectDate] = useState<{
     start: null | Date;
     end: null | Date;
@@ -266,6 +272,7 @@ const Date_Range_Picker = () => {
                     <DateBox
                       key={idx}
                       current={day.state === "cur"}
+                      today={today.getTime() === day.dateObj.getTime()}
                       selected={
                         selectDate.start !== null &&
                         selectDate.end !== null &&
